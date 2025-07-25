@@ -1,0 +1,42 @@
+# Ignore data files
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.parquet
+*.feather
+*.json
+
+# Ignore exports (e.g., forecast outputs, logs)
+exports/
+outputs/
+logs/
+reports/*.pdf
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.so
+
+# Ignore environment and dependency files
+.env
+*.env
+.envrc
+*.venv
+venv/
+.venv/
+Pipfile.lock
+
+# Ignore Conda environment backups
+*.yml
+
+# VSCode settings (optional)
+.vscode/
+
+# Mac/Linux/Windows system files
+.DS_Store
+Thumbs.db
+desktop.ini
