@@ -12,7 +12,7 @@ To predict daily sales for individual Rossmann stores using historical, store-le
 
 ## Business Context
 
-Rossmann is a major European drugstore chain with over 1,000 locations. Predicting store-level sales is vital for optimizing operations and minimizing waste. This project simulates a real-world decision support system for retail forecasting using machine learning.
+Rossmann is a major drugstore chain with over 3,000 locations across Europe. Predicting store-level sales is vital for optimizing operations and minimizing waste. This project simulates a real-world decision support system for retail forecasting using machine learning.
 
 ---
 
@@ -34,9 +34,9 @@ The dataset includes:
 - Explored distributions, sales trends, store patterns.
 - Visualized impact of promotions, assortment, competition, and holidays.
 
-> 📊 *Visual Placeholder 1: Store Sales Distribution by Day of Week*  
-> 📊 *Visual Placeholder 2: Sales Trends Over Time for Random Sample of Stores*  
-> 📊 *Visual Placeholder 3: Boxplots by Assortment Type and Store Type*
+> ![alt text](outputs/avg_sales_day_of_week_promo_status.png) 
+> ![alt text](outputs/average_sales_over_time.png)
+> ![alt text](outputs/store_type_assortment_boxplots.png)
 
 ---
 
@@ -46,7 +46,7 @@ The dataset includes:
 - Created binary flags: school holidays, promo-mismatch anomalies.
 - One-hot encoded high-impact categoricals.
 
-> 🧠 *Visual Placeholder 4: Correlation Matrix of Engineered Features*
+> ![alt text](outputs/corr_matrix_engineered_features_sales.png)
 
 ---
 
@@ -63,7 +63,7 @@ The dataset includes:
 - Identified global feature importance and local deviations.
 - Validated model behavior against business logic (e.g., weekend dips, promo peaks).
 
-> 🧠 *Visual Placeholder 5: SHAP Summary Plot (Top 20 Features)*  
+> ![alt text](outputs\shap_beeswarm_top_20.png)
 > 🧠 *Visual Placeholder 6: SHAP Force Plot for Selected Store-Day*  
 > 🧠 *Visual Placeholder 7: SHAP Dependence Plot – Promo vs Sales Impact*
 
