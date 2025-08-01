@@ -9,7 +9,6 @@
 
 # Ignore exports (e.g., forecast outputs, logs)
 exports/
-outputs/
 logs/
 reports/*.pdf
 
