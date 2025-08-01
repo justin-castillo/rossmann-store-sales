@@ -122,6 +122,6 @@ project_root/
 
 ## Author
 
-**Your Name**  
-[LinkedIn](https://www.linkedin.com/in/your-linkedin-handle)  
-[Portfolio (GitHub)](https://github.com/your-github-username)
+**Justin Castillo**  
+[LinkedIn](https://www.linkedin.com/in/justin-castillo-69351198/)  
+[Portfolio (GitHub)](https://github.com/justin-castillo)
