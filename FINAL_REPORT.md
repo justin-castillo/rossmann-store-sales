@@ -94,6 +94,7 @@ The project demonstrates a complete machine learning workflow for structured tab
 
 ---
 
-*Prepared by: [Your Name]  
-LinkedIn: [linkedin.com/in/your-handle]  
-GitHub Portfolio: [github.com/your-handle]*
+Author: Justin Castillo
+
+[LinkedIn](https://www.linkedin.com/in/justin-castillo-69351198/)  
+[GitHub Portfolio](https://github.com/justin-castillo)
