@@ -88,6 +88,6 @@ A leakage‑safe, time‑aware pipeline that forecasts daily sales per store.
 ---
 
 **Justin Castillo**  
-Email: *[add your email]*  
+Email: jcastillo.hotels@gmail.com 
 GitHub: https://github.com/justin-castillo  
 LinkedIn: https://www.linkedin.com/in/justin-castillo-69351198/
