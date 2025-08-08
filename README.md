@@ -26,7 +26,7 @@ This project delivers a full-cycle machine learning workflow to forecast daily s
 │   ├── X_test_processed.csv
 │   ├── y_test_processed.csv
 │   └── test_predictions.csv
-└── Rossmann_Final_Report_Pro.md       # Recruiter-ready project report
+└── Rossmann_Final_Report_Pro.md       # Project report
 ```
 
 ---
