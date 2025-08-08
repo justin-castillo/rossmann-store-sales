@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>01: Exploratory Data Analysis – Rossmann Store Sales</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-bce83624dd429190d13db9bf62533269.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Rossmann Store Sales</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Project Overview</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../01_EDA.ipynb"> 
+<span class="menu-text">EDA</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../02_Modeling.ipynb"> 
+<span class="menu-text">Modeling</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../Final_Report.html"> 
+<span class="menu-text">Final Report</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../tableau.qmd"> 
+<span class="menu-text">Dashboard</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><strong>01: Exploratory Data Analysis</strong></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Notebooks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../01_EDA.ipynb" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">EDA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../02_Modeling.ipynb" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Modeling</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../Final_Report.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Final Report</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../tableau.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dashboard</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data" id="toc-data" class="nav-link active" data-scroll-target="#data">Data</a></li>
+  <li><a href="#objective" id="toc-objective" class="nav-link" data-scroll-target="#objective">Objective</a></li>
+  <li><a href="#notebook-outline" id="toc-notebook-outline" class="nav-link" data-scroll-target="#notebook-outline">Notebook Outline</a></li>
+  <li><a href="#section-1-imports-load-data-merge-tables" id="toc-section-1-imports-load-data-merge-tables" class="nav-link" data-scroll-target="#section-1-imports-load-data-merge-tables"># Section 1: Imports, load data, merge tables</a></li>
+  <li><a href="#drop-days-when-store-is-closed-or-when-store-is-open-and-sales-0" id="toc-drop-days-when-store-is-closed-or-when-store-is-open-and-sales-0" class="nav-link" data-scroll-target="#drop-days-when-store-is-closed-or-when-store-is-open-and-sales-0">Drop days when store is closed, or when store is open and Sales == 0</a></li>
+  <li><a href="#section-2-initial-cleanup" id="toc-section-2-initial-cleanup" class="nav-link" data-scroll-target="#section-2-initial-cleanup">Section 2: Initial cleanup</a>
+  <ul class="collapse">
+  <li><a href="#remove-customers-column" id="toc-remove-customers-column" class="nav-link" data-scroll-target="#remove-customers-column">Remove Customers column</a></li>
+  <li><a href="#extract-and-transform-date-features" id="toc-extract-and-transform-date-features" class="nav-link" data-scroll-target="#extract-and-transform-date-features">Extract and transform date features</a></li>
+  <li><a href="#normalize-data-types-across-columns" id="toc-normalize-data-types-across-columns" class="nav-link" data-scroll-target="#normalize-data-types-across-columns">Normalize data types across columns</a></li>
+  <li><a href="#flag-anomalies-fix-them-when-possible" id="toc-flag-anomalies-fix-them-when-possible" class="nav-link" data-scroll-target="#flag-anomalies-fix-them-when-possible">Flag anomalies, fix them (when possible)</a></li>
+  <li><a href="#handling-of-missing-values" id="toc-handling-of-missing-values" class="nav-link" data-scroll-target="#handling-of-missing-values">Handling of missing values</a></li>
+  <li><a href="#feature-encoding" id="toc-feature-encoding" class="nav-link" data-scroll-target="#feature-encoding">Feature encoding</a></li>
+  </ul></li>
+  <li><a href="#section-3-data-exploration" id="toc-section-3-data-exploration" class="nav-link" data-scroll-target="#section-3-data-exploration">Section 3: Data exploration</a>
+  <ul class="collapse">
+  <li><a href="#basic-inspection" id="toc-basic-inspection" class="nav-link" data-scroll-target="#basic-inspection">Basic inspection</a></li>
+  <li><a href="#data-consistency" id="toc-data-consistency" class="nav-link" data-scroll-target="#data-consistency">Data consistency</a>
+  <ul class="collapse">
+  <li><a href="#sales" id="toc-sales" class="nav-link" data-scroll-target="#sales">Sales</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#section-4-store-level-insights" id="toc-section-4-store-level-insights" class="nav-link" data-scroll-target="#section-4-store-level-insights">Section 4: Store-level insights</a>
+  <ul class="collapse">
+  <li><a href="#store-type" id="toc-store-type" class="nav-link" data-scroll-target="#store-type">Store type</a>
+  <ul class="collapse">
+  <li><a href="#distribution-of-store-types" id="toc-distribution-of-store-types" class="nav-link" data-scroll-target="#distribution-of-store-types">Distribution of store types</a></li>
+  <li><a href="#assortment" id="toc-assortment" class="nav-link" data-scroll-target="#assortment">Assortment</a></li>
+  <li><a href="#competition-distance" id="toc-competition-distance" class="nav-link" data-scroll-target="#competition-distance">Competition distance</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#section-5-promotions-and-holidays" id="toc-section-5-promotions-and-holidays" class="nav-link" data-scroll-target="#section-5-promotions-and-holidays">Section 5: Promotions and holidays</a>
+  <ul class="collapse">
+  <li><a href="#promo-promo2" id="toc-promo-promo2" class="nav-link" data-scroll-target="#promo-promo2">Promo / Promo2</a></li>
+  <li><a href="#holidays" id="toc-holidays" class="nav-link" data-scroll-target="#holidays">Holidays</a></li>
+  </ul></li>
+  <li><a href="#section-6-feature-interactions" id="toc-section-6-feature-interactions" class="nav-link" data-scroll-target="#section-6-feature-interactions">Section 6: Feature interactions</a>
+  <ul class="collapse">
+  <li><a href="#promotional-strategy" id="toc-promotional-strategy" class="nav-link" data-scroll-target="#promotional-strategy">Promotional strategy</a></li>
+  <li><a href="#store-characteristics" id="toc-store-characteristics" class="nav-link" data-scroll-target="#store-characteristics">Store characteristics</a></li>
+  </ul></li>
+  <li><a href="#section-7-feature-engineering" id="toc-section-7-feature-engineering" class="nav-link" data-scroll-target="#section-7-feature-engineering">Section 7: Feature engineering</a>
+  <ul class="collapse">
+  <li><a href="#final-feature-adjustments---continuous-high-cardinality-variables" id="toc-final-feature-adjustments---continuous-high-cardinality-variables" class="nav-link" data-scroll-target="#final-feature-adjustments---continuous-high-cardinality-variables">Final feature adjustments - continuous / high-cardinality variables</a>
+  <ul class="collapse">
+  <li><a href="#engineer-isprestateholidaywindow-feature" id="toc-engineer-isprestateholidaywindow-feature" class="nav-link" data-scroll-target="#engineer-isprestateholidaywindow-feature">Engineer IsPreStateHolidayWindow feature</a></li>
+  <li><a href="#engineer-activestorecount-feature" id="toc-engineer-activestorecount-feature" class="nav-link" data-scroll-target="#engineer-activestorecount-feature">Engineer ActiveStoreCount feature</a></li>
+  <li><a href="#new-features-based-on-interactions" id="toc-new-features-based-on-interactions" class="nav-link" data-scroll-target="#new-features-based-on-interactions">New features based on interactions</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#export-processed-dataset-for-modeling" id="toc-export-processed-dataset-for-modeling" class="nav-link" data-scroll-target="#export-processed-dataset-for-modeling">Export processed dataset for modeling</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><strong>01: Exploratory Data Analysis</strong></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p>This notebook explores historical sales data from Rossmann stores to uncover patterns across time, promotions, and store attributes.</p>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<ul>
+<li>Rossmann is a drug store chain with over 3000 locations across Europe (kaggle.com). Each instance in this dataset contains information about a single day’s business.</li>
+<li>The entire set spans approximately 3 years (2013 - 2015).</li>
+<li>There are about 100,000 instances, of which roughly 84,000 contain useful information (the remaining instances are when the store was closed and sales were not possible).</li>
+</ul>
+</section>
+<section id="objective" class="level2">
+<h2 class="anchored" data-anchor-id="objective">Objective</h2>
+<ul>
+<li>The goals of this notebook are to understand the data deeply and begin revealing its principal trends, then preprocess it to maximize the predictive performance of the model.</li>
+<li>The target of our analysis and model is <code>Sales</code>, and we are tasked with predicting daily amount for the next 6 weeks based on the given data.</li>
+</ul>
+</section>
+<section id="notebook-outline" class="level2">
+<h2 class="anchored" data-anchor-id="notebook-outline">Notebook Outline</h2>
+<ol type="1">
+<li><a href="#section-1-imports-load-data-merge-tables">Imports, load data, merge tables</a><br>
+</li>
+<li><a href="#section-2-initial-cleanup">Initial cleanup</a><br>
+</li>
+<li><a href="#section-3-data-exploration">Data exploration</a><br>
+</li>
+<li><a href="#section-4-store-level-insights">Store-level insights</a><br>
+</li>
+<li><a href="#section-5-promotions-and-holidays">Promotions and holidays</a><br>
+</li>
+<li><a href="#section-6-feature-interactions">Feature interactions</a><br>
+</li>
+<li><a href="#section-7-feature-engineering">Feature engineering</a><br>
+</li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ol>
+</section>
+<section id="section-1-imports-load-data-merge-tables" class="level2">
+<h2 class="anchored" data-anchor-id="section-1-imports-load-data-merge-tables"># Section 1: Imports, load data, merge tables</h2>
+<ul>
+<li><p>Load all required libraries and datasets - train.csv (main table) and store.csv (store metadata).</p></li>
+<li><p>Merge on the Store column to enrich the training set with store-level features.</p></li>
+</ul>
+</section>
+<section id="drop-days-when-store-is-closed-or-when-store-is-open-and-sales-0" class="level2">
+<h2 class="anchored" data-anchor-id="drop-days-when-store-is-closed-or-when-store-is-open-and-sales-0">Drop days when store is closed, or when store is open and Sales == 0</h2>
+<div id="032682f6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>Zero-sales open days: 54
+Zero-sales total (regardless of open/closed): 0
+&lt;class 'pandas.core.frame.DataFrame'&gt;
+Index: 844338 entries, 0 to 1017190
+Data columns (total 17 columns):
+ #   Column                     Non-Null Count   Dtype  
+---  ------                     --------------   -----  
+ 0   Store                      844338 non-null  int64  
+ 1   DayOfWeek                  844338 non-null  int64  
+ 2   Date                       844338 non-null  object 
+ 3   Sales                      844338 non-null  int64  
+ 4   Customers                  844338 non-null  int64  
+ 5   Promo                      844338 non-null  int64  
+ 6   StateHoliday               844338 non-null  object 
+ 7   SchoolHoliday              844338 non-null  int64  
+ 8   StoreType                  844338 non-null  object 
+ 9   Assortment                 844338 non-null  object 
+ 10  CompetitionDistance        842152 non-null  float64
+ 11  CompetitionOpenSinceMonth  575738 non-null  float64
+ 12  CompetitionOpenSinceYear   575738 non-null  float64
+ 13  Promo2                     844338 non-null  int64  
+ 14  Promo2SinceWeek            421046 non-null  float64
+ 15  Promo2SinceYear            421046 non-null  float64
+ 16  PromoInterval              421046 non-null  object 
+dtypes: float64(5), int64(7), object(5)
+memory usage: 116.0+ MB</code></pre>
+</div>
+</div>
+</section>
+<section id="section-2-initial-cleanup" class="level1">
+<h1>Section 2: Initial cleanup</h1>
+<hr>
+<ul>
+<li>Perform essential preprocessing to make the dataset clean and consistent before exploration.</li>
+<li>This includes removing unavailable target columns, extracting date components, normalizing data types, and flagging/fixing data quality issues.</li>
+</ul>
+<section id="remove-customers-column" class="level2">
+<h2 class="anchored" data-anchor-id="remove-customers-column">Remove Customers column</h2>
+<p>Drop the Customers column, which is not available at prediction time. Keeping it would cause data leakage.</p>
+</section>
+<section id="extract-and-transform-date-features" class="level2">
+<h2 class="anchored" data-anchor-id="extract-and-transform-date-features">Extract and transform date features</h2>
+<p>Extract granular time-based features such as year, month, day, and week-related indicators from the Date column. These features may carry strong temporal signals and seasonality patterns important for modeling.</p>
+</section>
+<section id="normalize-data-types-across-columns" class="level2">
+<h2 class="anchored" data-anchor-id="normalize-data-types-across-columns">Normalize data types across columns</h2>
+<p>Ensure all categorical features are consistently treated as strings. This avoids encoding errors and makes feature engineering and encoding more predictable downstream.</p>
+</section>
+<section id="flag-anomalies-fix-them-when-possible" class="level2">
+<h2 class="anchored" data-anchor-id="flag-anomalies-fix-them-when-possible">Flag anomalies, fix them (when possible)</h2>
+</section>
+<section id="handling-of-missing-values" class="level2">
+<h2 class="anchored" data-anchor-id="handling-of-missing-values">Handling of missing values</h2>
+<p>Quantify the percentage of missing values for each column to inform which fields require imputation, special handling, or potential exclusion.</p>
+<blockquote class="blockquote">
+<h3 id="proportion-of-nulls" class="anchored">Proportion of nulls</h3>
+</blockquote>
+<div id="2958de87" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>Promo2SinceYear             0.50
+PromoInterval               0.50
+Promo2SinceWeek             0.50
+CompetitionOpenSinceYear    0.32
+CompetitionOpenSinceMonth   0.32
+CompetitionDistance         0.00
+Promo                       0.00
+Date                        0.00
+DayOfWeek                   0.00
+Store                       0.00
+Sales                       0.00
+Assortment                  0.00
+StateHoliday                0.00
+Promo2                      0.00
+SchoolHoliday               0.00
+StoreType                   0.00
+Year                        0.00
+Month                       0.00
+Day                         0.00
+Week                        0.00
+IsWeekend                   0.00
+dtype: float64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="missing-values-for-top-4-columns-with-the-most-nulls" class="anchored">Missing values for top 4 columns with the most nulls</h3>
+</blockquote>
+<p>Visualize the absolute count of missing values in the columns with the highest proportion of nulls. This provides a quick overview of which fields require targeted cleanup.</p>
+<div id="863d1ab2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-scrolled="true" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="null-handling-for-promo2sinceyear-promo2sinceweek-promointerval" class="anchored">Null handling for Promo2SinceYear, Promo2SinceWeek, PromoInterval</h3>
+</blockquote>
+<ul>
+<li><p>For stores with Promo2 == 1, we impute safe defaults in Promo2SinceYear and Promo2SinceWeek to allow type conversion.</p></li>
+<li><p>Then we compute Promo2Start as a date, calculate promo duration in weeks, and set duration to 0 for inactive stores.</p></li>
+</ul>
+<div id="ef9ab22e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="10">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.series.Series'&gt;
+Index: 844338 entries, 0 to 1017190
+Series name: Promo2Start
+Non-Null Count   Dtype         
+--------------   -----         
+421046 non-null  datetime64[ns]
+dtypes: datetime64[ns](1)
+memory usage: 45.1 MB</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>0          NaT
+1   2010-03-29
+2   2011-04-04
+3          NaT
+4          NaT
+5          NaT
+6          NaT
+7          NaT
+8          NaT
+9          NaT
+Name: Promo2Start, dtype: datetime64[ns]</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="null-handling-for-competitionopensinceyear-competitionopensincemonth" class="anchored">Null handling for CompetitionOpenSinceYear, CompetitionOpenSinceMonth</h3>
+</blockquote>
+<p>Handle missing values in competition-related fields. If either component of the open date is missing, we impute the missing part with the median or a fallback and reconstruct the full competition open date.</p>
+<div id="66bc31e0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;outputs_hidden&quot;:true,&quot;source_hidden&quot;:true}}" data-execution_count="11">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 844338 entries, 0 to 844337
+Data columns (total 26 columns):
+ #   Column                     Non-Null Count   Dtype         
+---  ------                     --------------   -----         
+ 0   Store                      844338 non-null  int64         
+ 1   DayOfWeek                  844338 non-null  int64         
+ 2   Date                       844338 non-null  datetime64[ns]
+ 3   Sales                      844338 non-null  int64         
+ 4   Promo                      844338 non-null  int64         
+ 5   StateHoliday               844338 non-null  string        
+ 6   SchoolHoliday              844338 non-null  int64         
+ 7   StoreType                  844338 non-null  string        
+ 8   Assortment                 844338 non-null  string        
+ 9   CompetitionDistance        842152 non-null  float64       
+ 10  CompetitionOpenSinceMonth  575738 non-null  float64       
+ 11  CompetitionOpenSinceYear   575738 non-null  float64       
+ 12  Promo2                     844338 non-null  int64         
+ 13  Promo2SinceWeek            421046 non-null  float64       
+ 14  Promo2SinceYear            844338 non-null  int64         
+ 15  PromoInterval              421046 non-null  string        
+ 16  Year                       844338 non-null  int64         
+ 17  Month                      844338 non-null  int64         
+ 18  Day                        844338 non-null  int64         
+ 19  Week                       844338 non-null  int64         
+ 20  IsWeekend                  844338 non-null  int64         
+ 21  Promo2Start                421046 non-null  datetime64[ns]
+ 22  Promo2DurationWeeks        844338 non-null  float64       
+ 23  CompetitionOpenSince       844338 non-null  datetime64[ns]
+ 24  StoreStartDate             844338 non-null  datetime64[ns]
+ 25  CompetitionOpenDuration    844338 non-null  int64         
+dtypes: datetime64[ns](4), float64(5), int64(13), string(4)
+memory usage: 167.5 MB</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="null-handling-for-promointerval-and-competitiondistance" class="anchored">Null Handling for PromoInterval and CompetitionDistance</h3>
+</blockquote>
+<ul>
+<li><p>We drop <code>PromoInterval</code> because its meaning is redundant with existing <code>Promo2</code>, <code>Promo2SinceWeek</code>, and <code>Promo2SinceYear</code> fields. Most of its values are missing for non-participating stores (where Promo2 == 0), and the remaining information is already captured in the constructed <code>Promo2Start</code> and <code>Promo2DurationWeeks</code>.</p></li>
+<li><p>For <code>CompetitionDistance</code>, we impute missing values using the median. This avoids introducing outliers or bias into the model, since the missing values are rare (~0.2% of rows) and unlikely to carry a specific signal. Imputing with the median preserves distributional stability and avoids skewing model behavior.</p></li>
+</ul>
+</section>
+<section id="feature-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="feature-encoding">Feature encoding</h2>
+<p>Prepare for encoding by inspecting feature cardinality. This step informs the choice between one-hot encoding, label encoding, or grouping of rare categories.</p>
+<blockquote class="blockquote">
+<h3 id="feature-cardinality" class="anchored">Feature cardinality</h3>
+</blockquote>
+<p>Display the number of unique values for each feature. Features with low cardinality are good candidates for one-hot encoding, while high-cardinality features may require alternative strategies.</p>
+<div id="162dafde" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>Store                         1115
+DayOfWeek                        7
+Date                           942
+Sales                        21733
+Promo                            2
+StateHoliday                     4
+SchoolHoliday                    2
+StoreType                        4
+Assortment                       3
+CompetitionDistance            654
+CompetitionOpenSinceMonth       12
+CompetitionOpenSinceYear        23
+Promo2                           2
+Promo2SinceWeek                 50
+Promo2SinceYear                  8
+Year                             3
+Month                           12
+Day                             31
+Week                            52
+IsWeekend                        2
+Promo2Start                    150
+Promo2DurationWeeks            314
+CompetitionOpenSince           174
+StoreStartDate                   5
+CompetitionOpenDuration        376
+dtype: int64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="label-encode-low-cardinality-numeric-categorical-columns" class="anchored">Label encode low-cardinality numeric categorical columns</h3>
+</blockquote>
+<ul>
+<li><p>We encode numeric categorical features with a small number of discrete values ( DayOfWeek, Promo2SinceYear) by casting them to int64.</p></li>
+<li><p>Missing values are filled with -1 to preserve numerical format while signaling “missing” in a way that models can interpret.</p></li>
+<li><p>This avoids issues with NaNs during modeling while preserving ordinal or numeric meaning where applicable.</p></li>
+</ul>
+<div id="77b18c57" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="15">
+<div class="cell-output cell-output-stdout">
+<pre><code>Zero-sales total (regardless of open/closed): 0</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="encode-isstateholiday-column-to-binary" class="anchored">Encode IsStateHoliday column to binary</h3>
+<ul>
+<li>Convert the StateHoliday column into a binary format, mapping ‘0’ to 0 (not a holiday) and other holiday types (‘a’, ‘b’, ‘c’) to 1. This simplifies sparse holiday categories into a single binary feature to capture their overall impact on sales.</li>
+</ul>
+</blockquote>
+<ul>
+<li>Rename SchoolHoliday to IsSchoolHoliday for naming consistency.</li>
+</ul>
+<div id="e43c10b3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="16">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="94c73242" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="18">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="label-encode-structured-categorical-features-for-tree-based-models" class="anchored">Label-encode structured categorical features for tree-based models</h3>
+</blockquote>
+<p>Convert features like weeks, months, and opening dates into numeric format using LabelEncoder.</p>
+<p>While some of these columns have an inherent order (Month, Week), we apply label encoding for simplicity and compatibility with tree-based models (XGBoost).</p>
+<p>Inputs are cast to string to ensure consistent encoding, even for integer-based columns with missing or irregular values.</p>
+</section>
+</section>
+<section id="section-3-data-exploration" class="level1">
+<h1>Section 3: Data exploration</h1>
+<hr>
+<ul>
+<li>Perform exploratory analysis to understand data structure, identify potential issues, and begin recognizing key trends.</li>
+<li>This includes inspecting data types, missing values, date ranges, sales distribution, and temporal patterns.</li>
+</ul>
+<section id="basic-inspection" class="level2">
+<h2 class="anchored" data-anchor-id="basic-inspection">Basic inspection</h2>
+<p>Confirm latest format of updated dataframe.</p>
+<div id="9711add0-ab5e-4484-b5b6-bfb4b11146d0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="20">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 844338 entries, 0 to 844337
+Data columns (total 26 columns):
+ #   Column                     Non-Null Count   Dtype         
+---  ------                     --------------   -----         
+ 0   Store                      844338 non-null  int64         
+ 1   DayOfWeek                  844338 non-null  int64         
+ 2   Date                       844338 non-null  datetime64[ns]
+ 3   Sales                      844338 non-null  int64         
+ 4   Promo                      844338 non-null  int64         
+ 5   StateHoliday               844338 non-null  string        
+ 6   IsSchoolHoliday            844338 non-null  int64         
+ 7   StoreType                  844338 non-null  string        
+ 8   Assortment                 844338 non-null  string        
+ 9   CompetitionDistance        844338 non-null  float64       
+ 10  CompetitionOpenSinceMonth  844338 non-null  int64         
+ 11  CompetitionOpenSinceYear   844338 non-null  int64         
+ 12  Promo2                     844338 non-null  int64         
+ 13  Promo2SinceWeek            844338 non-null  int64         
+ 14  Promo2SinceYear            844338 non-null  int64         
+ 15  Year                       844338 non-null  int64         
+ 16  Month                      844338 non-null  int64         
+ 17  Day                        844338 non-null  int64         
+ 18  Week                       844338 non-null  int64         
+ 19  IsWeekend                  844338 non-null  int64         
+ 20  Promo2Start                421046 non-null  datetime64[ns]
+ 21  Promo2DurationWeeks        844338 non-null  float64       
+ 22  CompetitionOpenSince       844338 non-null  datetime64[ns]
+ 23  StoreStartDate             844338 non-null  datetime64[ns]
+ 24  CompetitionOpenDuration    844338 non-null  int64         
+ 25  IsStateHoliday             844338 non-null  int64         
+dtypes: datetime64[ns](4), float64(2), int64(17), string(3)
+memory usage: 167.5 MB</code></pre>
+</div>
+</div>
+<div id="28f2c400" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-scrolled="true" data-execution_count="21">
+<div class="cell-output cell-output-display" data-execution_count="21">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Store</th>
+<th data-quarto-table-cell-role="th">DayOfWeek</th>
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th">Sales</th>
+<th data-quarto-table-cell-role="th">Promo</th>
+<th data-quarto-table-cell-role="th">IsSchoolHoliday</th>
+<th data-quarto-table-cell-role="th">CompetitionDistance</th>
+<th data-quarto-table-cell-role="th">CompetitionOpenSinceMonth</th>
+<th data-quarto-table-cell-role="th">CompetitionOpenSinceYear</th>
+<th data-quarto-table-cell-role="th">Promo2</th>
+<th data-quarto-table-cell-role="th">Promo2SinceWeek</th>
+<th data-quarto-table-cell-role="th">Promo2SinceYear</th>
+<th data-quarto-table-cell-role="th">Year</th>
+<th data-quarto-table-cell-role="th">Month</th>
+<th data-quarto-table-cell-role="th">Day</th>
+<th data-quarto-table-cell-role="th">Week</th>
+<th data-quarto-table-cell-role="th">IsWeekend</th>
+<th data-quarto-table-cell-role="th">Promo2Start</th>
+<th data-quarto-table-cell-role="th">Promo2DurationWeeks</th>
+<th data-quarto-table-cell-role="th">CompetitionOpenSince</th>
+<th data-quarto-table-cell-role="th">StoreStartDate</th>
+<th data-quarto-table-cell-role="th">CompetitionOpenDuration</th>
+<th data-quarto-table-cell-role="th">IsStateHoliday</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844338</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+<td>421046</td>
+<td>844,338.00</td>
+<td>844338</td>
+<td>844338</td>
+<td>844,338.00</td>
+<td>844,338.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>558.42</td>
+<td>2.52</td>
+<td>2014-04-11 01:08:38.729702912</td>
+<td>6,955.96</td>
+<td>0.45</td>
+<td>0.19</td>
+<td>5,450.03</td>
+<td>7.93</td>
+<td>18.15</td>
+<td>0.50</td>
+<td>35.10</td>
+<td>1,002.66</td>
+<td>2,013.83</td>
+<td>5.85</td>
+<td>14.89</td>
+<td>23.89</td>
+<td>0.17</td>
+<td>2012-01-23 17:13:56.220270336</td>
+<td>57.10</td>
+<td>2010-06-03 06:34:41.007369216</td>
+<td>2013-01-02 09:10:15.020999424</td>
+<td>46.44</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">min</td>
+<td>1.00</td>
+<td>0.00</td>
+<td>2013-01-01 00:00:00</td>
+<td>46.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>20.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>-1.00</td>
+<td>2,013.00</td>
+<td>1.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2009-07-27 00:00:00</td>
+<td>0.00</td>
+<td>1900-01-01 00:00:00</td>
+<td>2013-01-01 00:00:00</td>
+<td>-32.00</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>280.00</td>
+<td>1.00</td>
+<td>2013-08-16 00:00:00</td>
+<td>4,859.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>710.00</td>
+<td>5.00</td>
+<td>15.00</td>
+<td>0.00</td>
+<td>19.00</td>
+<td>-1.00</td>
+<td>2,013.00</td>
+<td>3.00</td>
+<td>7.00</td>
+<td>11.00</td>
+<td>0.00</td>
+<td>2011-02-28 00:00:00</td>
+<td>0.00</td>
+<td>2008-03-01 00:00:00</td>
+<td>2013-01-02 00:00:00</td>
+<td>10.00</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>558.00</td>
+<td>2.00</td>
+<td>2014-03-31 00:00:00</td>
+<td>6,369.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>2,320.00</td>
+<td>9.00</td>
+<td>19.00</td>
+<td>0.00</td>
+<td>50.00</td>
+<td>-1.00</td>
+<td>2,014.00</td>
+<td>6.00</td>
+<td>15.00</td>
+<td>22.00</td>
+<td>0.00</td>
+<td>2012-04-02 00:00:00</td>
+<td>0.00</td>
+<td>2012-11-01 00:00:00</td>
+<td>2013-01-02 00:00:00</td>
+<td>26.00</td>
+<td>0.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>837.00</td>
+<td>4.00</td>
+<td>2014-12-11 00:00:00</td>
+<td>8,360.00</td>
+<td>1.00</td>
+<td>0.00</td>
+<td>6,880.00</td>
+<td>12.00</td>
+<td>23.00</td>
+<td>1.00</td>
+<td>50.00</td>
+<td>2,012.00</td>
+<td>2,014.00</td>
+<td>8.00</td>
+<td>22.00</td>
+<td>37.00</td>
+<td>0.00</td>
+<td>2013-03-04 00:00:00</td>
+<td>108.00</td>
+<td>2013-01-02 00:00:00</td>
+<td>2013-01-02 00:00:00</td>
+<td>74.00</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">max</td>
+<td>1,115.00</td>
+<td>6.00</td>
+<td>2015-07-31 00:00:00</td>
+<td>41,551.00</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>75,860.00</td>
+<td>12.00</td>
+<td>23.00</td>
+<td>1.00</td>
+<td>50.00</td>
+<td>2,015.00</td>
+<td>2,015.00</td>
+<td>12.00</td>
+<td>30.00</td>
+<td>51.00</td>
+<td>1.00</td>
+<td>2015-06-01 00:00:00</td>
+<td>313.00</td>
+<td>2015-08-01 00:00:00</td>
+<td>2013-07-05 00:00:00</td>
+<td>1,407.00</td>
+<td>1.00</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">std</td>
+<td>321.73</td>
+<td>1.72</td>
+<td>NaN</td>
+<td>3,103.82</td>
+<td>0.50</td>
+<td>0.40</td>
+<td>7,801.09</td>
+<td>3.96</td>
+<td>4.90</td>
+<td>0.50</td>
+<td>18.63</td>
+<td>1,006.33</td>
+<td>0.78</td>
+<td>3.32</td>
+<td>8.89</td>
+<td>15.33</td>
+<td>0.38</td>
+<td>NaN</td>
+<td>82.31</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>64.36</td>
+<td>0.03</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="data-consistency" class="level2">
+<h2 class="anchored" data-anchor-id="data-consistency">Data consistency</h2>
+<ul>
+<li>We observe a dip in the number of daily records during part of the time series—likely due to store closures or incomplete reporting.</li>
+<li>This will be addressed in a later section by accounting for the number of active stores per day to ensure fair normalization of sales figures across time.</li>
+</ul>
+<div id="89fc89ff" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="22">
+<div class="cell-output cell-output-stdout">
+<pre><code>Start date: 2013-01-01 00:00:00
+End date: 2015-07-31 00:00:00
+Date range: 941 days 00:00:00</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-23-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="sales" class="level3">
+<h3 class="anchored" data-anchor-id="sales">Sales</h3>
+<ul>
+<li>Plot the average sales per store to examine cross-store variability. This reveals how store performance is distributed and whether some stores consistently underperform or dominate sales volume.</li>
+</ul>
+<blockquote class="blockquote">
+<h4 id="sales-distribution" class="anchored">Sales distribution</h4>
+</blockquote>
+<ul>
+<li><p>Visualize the average sales per store and the raw daily sales.</p></li>
+<li><p>The histograms shows strong right skew, confirming that many stores make low sales and only a few achieve very high values. This informs potential transformations.</p></li>
+</ul>
+<div id="316b907b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="23">
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>Text(0.5, 1.0, 'Avg Sales Per Store')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-24-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="393c5052" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="24">
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>Text(0.5, 1.0, 'Sales Distribution')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-25-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="average-overall-sales-by-date" class="anchored">Average overall sales by date</h4>
+</blockquote>
+<ul>
+<li><p>Plot the daily average sales across all stores, applying LOWESS smoothing to reveal seasonality and temporal trends. This helps identify sales peaks (holidays or promotions) and long-term cycles that may influence forecasting.</p></li>
+<li><p>The LOWESS-smoothed line reveals several recurring peaks in average daily sales, suggesting strong seasonality effects. These spikes likely align with major holidays or promotional events.</p></li>
+<li><p>We also observe a generally stable sales level between peaks, indicating that most stores maintain consistent performance outside of promotional periods.</p></li>
+</ul>
+<div id="5c527a83" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="25">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-26-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="section-4-store-level-insights" class="level1">
+<h1>Section 4: Store-level insights</h1>
+<hr>
+<ul>
+<li>Average sales by store</li>
+<li>Sales over time for a few example stores</li>
+<li>Store type distribution</li>
+<li>Competition distance distribution</li>
+</ul>
+<section id="store-type" class="level2">
+<h2 class="anchored" data-anchor-id="store-type">Store type</h2>
+<section id="distribution-of-store-types" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-store-types">Distribution of store types</h3>
+<ul>
+<li><p>Store type ‘a’ dominates the dataset, accounting for the majority of entries. Store types ‘c’ and ‘d’ appear significantly less frequently, while ‘b’ is rare.</p>
+<ul>
+<li>This class imbalance should be kept in mind for modeling and interpretation, especially if store type is used as a feature — models may overweight patterns found in the dominant type. It may also be helpful to explore whether store performance varies significantly by type.</li>
+</ul></li>
+</ul>
+<div id="e85b59aa" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="26">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="top-20-performing-stores-by-average-sales" class="anchored">Top 20 performing stores by average sales</h4>
+</blockquote>
+<ul>
+<li><p>This bar chart highlights the top 20 stores with the highest average daily sales.</p>
+<ul>
+<li><p>Store 817 stands out as a clear leader, significantly outperforming all others.</p></li>
+<li><p>Most other top-performing stores cluster between 12,000 and 18,000 in average sales, suggesting a small subset of stores drive a disproportionate share of overall revenue.</p></li>
+<li><p>This distribution may indicate regional effects, store format advantages, or localized customer behavior — all of which warrant further investigation.</p></li>
+</ul></li>
+</ul>
+<div id="7f6912f6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="27">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="sales-of-each-type-of-store" class="anchored">Sales of each type of store</h4>
+</blockquote>
+<ul>
+<li><p>The first boxplot shows the full distribution of daily sales for each store type, highlighting outliers and spread.</p>
+<ul>
+<li>Store type b clearly exhibits the highest median and widest variability in sales, while types a, c, and d show similar, more modest distributions.</li>
+</ul></li>
+<li><p>The second chart summarizes these results using mean sales and standard deviation.</p>
+<ul>
+<li>Again, store type b leads in average performance, with a substantially higher mean and wider standard deviation, indicating more volatile but potentially more profitable behavior.</li>
+</ul></li>
+</ul>
+<div id="ad2237e1" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="28">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="bb5bd43f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="29">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="count-of-each-type-of-store" class="anchored">Count of each type of store</h4>
+</blockquote>
+<ul>
+<li><p>This plot shows the distribution of store types in the dataset. Store type a is by far the most common, followed by d, c, and a small number of type b stores.</p></li>
+<li><p>When viewed in context with the earlier sales plots:</p>
+<ul>
+<li><p>Type b stores are rare but exhibit the highest average sales and largest spread, suggesting they are high-performing, high-variance locations.</p></li>
+<li><p>Type a stores dominate in count but have moderate average sales. Types c and d have similar mid-range sales performance.</p></li>
+</ul></li>
+</ul>
+<div id="7e745106" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="30">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-31-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="assortment" class="level3">
+<h3 class="anchored" data-anchor-id="assortment">Assortment</h3>
+<ul>
+<li><p>The majority of stores fall under assortment types ‘a’ and ‘c’, with type ‘b’ being extremely rare.</p>
+<ul>
+<li><p>Despite its low representation, assortment type ‘b’ has the highest average sales and a visibly higher sales distribution.</p></li>
+<li><p>This suggests that type ‘b’ assortments may be strategically used in high-performing locations or target specific customer segments that yield higher revenue.</p></li>
+</ul></li>
+<li><p>Assortments ‘a’ and ‘c’ have similar average sales and distributions, but given their large volume, they may represent standard offerings.</p>
+<ul>
+<li>The wide standard deviations across all types indicate considerable variability in store performance within each assortment category, especially in type ‘b’, which shows both high mean and high variance.</li>
+</ul></li>
+<li><p>This pattern may suggest that assortment type ‘b’ is reserved for select stores with greater revenue potential, while ‘a’ and ‘c’ serve as more generalized configurations.</p></li>
+</ul>
+<blockquote class="blockquote">
+<h4 id="distribution-of-assortment-types" class="anchored">Distribution of assortment types</h4>
+</blockquote>
+<div id="3a8beac8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="31">
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>Text(0.5, 1.0, 'Distribution of Assortment Types')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-32-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="sales-by-assortment" class="anchored">Sales by assortment</h4>
+</blockquote>
+<div id="3aa1c676" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="32">
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>Text(0.5, 1.0, 'Sales Distribution by Assortment Type')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-33-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="average-sales-by-assortment" class="anchored">Average sales by assortment</h4>
+</blockquote>
+<div id="c3c877ac" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="33">
+<div class="cell-output cell-output-display" data-execution_count="33">
+<pre><code>Text(0.5, 1.0, 'Average Sales by Assortment Type')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-34-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="competition-distance" class="level3">
+<h3 class="anchored" data-anchor-id="competition-distance">Competition distance</h3>
+<ul>
+<li><p>These visualizations explore how competition distance varies by store type and how it correlates with sales performance.</p>
+<ul>
+<li><p>The KDE plot shows that most stores are located close to competitors, regardless of type, though the degree of clustering varies.</p></li>
+<li><p>The boxplot confirms this clustering but also reveals that Store Types a, c, and d have wider interquartile ranges and more extreme outliers, suggesting more geographic diversity, including rural or sparsely populated regions.</p></li>
+</ul></li>
+<li><p>Store Type b is distinct:</p>
+<ul>
+<li><p>It has a sharp KDE peak near zero and a tight boxplot distribution, indicating consistent placement in areas of dense competition.</p></li>
+<li><p>Rather than being negatively affected, these stores may actually benefit from this setup—likely operating in busy commercial zones where high foot traffic and dense retail clusters help drive sales despite proximity to rivals.</p></li>
+</ul></li>
+<li><p>The scatter plot of Sales vs.&nbsp;Competition Distance further supports this interpretation:</p>
+<ul>
+<li><p>Stores with very short competition distances achieve high sales figures, reinforcing the idea that being near competitors is actually beneficial.</p></li>
+<li><p>This may reflect advantages of urban placement — visibility and foot traffic outweighing the risks of competition.</p></li>
+</ul></li>
+</ul>
+<div id="7a5f93b0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="34">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-35-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="2599633b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="35">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-36-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="ce33c53f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="36">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-37-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="66f0dd05" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="37">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-38-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="section-5-promotions-and-holidays" class="level1">
+<h1>Section 5: Promotions and holidays</h1>
+<hr>
+<ul>
+<li><p>In this section, we examine how promotional campaigns and holiday schedules—particularly school holidays—impact store sales.</p></li>
+<li><p>We assess distributional differences, evaluate statistical significance, and explore possible explanations for observed patterns.</p></li>
+<li><p>This analysis helps identify how external events and marketing efforts influence customer behavior and purchasing volume.</p></li>
+<li><p>Filtering for only open days ensures that we analyze the effects of these time-related features on days where sales are actually possible.</p></li>
+</ul>
+<section id="promo-promo2" class="level2">
+<h2 class="anchored" data-anchor-id="promo-promo2">Promo / Promo2</h2>
+<blockquote class="blockquote">
+<h3 id="distribution-of-promo-promo2-open-days-only" class="anchored">Distribution of Promo / Promo2 (Open Days Only)</h3>
+</blockquote>
+<ul>
+<li><p>The <code>Promo</code> feature (indicating a periodic, short-term promotional event) is active on a significant portion of open days, but not the majority.</p></li>
+<li><p>The <code>Promo2</code> feature (a long-term, continuous promotional program) is roughly balanced, with nearly half of the open days showing participation.</p></li>
+</ul>
+<div id="8edc28ed" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="38">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-39-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-39-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="promo-trends-over-time" class="anchored">Promo trends over time</h3>
+</blockquote>
+<ul>
+<li><p>Promo days (short-term promotional events) show clear fluctuations month-to-month, with noticeable seasonal spikes—particularly in early 2015 suggesting that promotions are timed to specific campaigns or business cycles.</p></li>
+<li><p>In contrast, Promo2 (longer-running, scheduled promotions) maintains a much more stable monthly pattern. Apart from a significant drop in mid-2014, the proportion of Promo2 days hovers steadily around 50%, reinforcing its nature as a persistent, programmatic promotion type.</p></li>
+</ul>
+<div id="6e14eb25" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="39">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-40-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="a34edfd0" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="40">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-41-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="impact-of-promos-on-sales" class="anchored">Impact of promos on sales</h3>
+</blockquote>
+<ul>
+<li><p>To evaluate how promotions influence store sales on days when stores are open, we compare sales distributions with and without promotions using violin and box plots.</p>
+<ul>
+<li><p>Promo (Standard Promotion)</p>
+<ul>
+<li><p>The first violin plot shows a clear shift in the sales distribution between days with Promo = 0 and Promo = 1.</p>
+<ul>
+<li>Stores running a standard promotion tend to have a higher median sales value and higher IQR, as well as more density for higher sales values, strongly suggesting that the standard promotion is associated with a meaningful boost in sales volume.</li>
+</ul></li>
+</ul></li>
+<li><p>Promo2 (Ongoing Promotion Campaign)</p>
+<ul>
+<li><p>The boxplot comparing Promo2 = 0 vs Promo2 = 1 shows minimal difference in both median and IQR (interquartile range).</p>
+<ul>
+<li>While there are outliers in both groups, the central distribution remains largely unchanged. There is a slight difference that suggests sales are actually greater when Promo2 is inactive.</li>
+</ul></li>
+<li><p>This implies that Promo2, on its own, does not appear to significantly impact daily sales, at least not in a way that’s consistently detectable in the aggregated data.</p></li>
+</ul></li>
+</ul></li>
+</ul>
+<div id="51d5b360" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="41">
+<div class="cell-output cell-output-display" data-execution_count="41">
+<pre><code>Text(0.5, 1.0, 'Sales Distribution with/without Promo ')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-42-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="c7576553" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="42">
+<div class="cell-output cell-output-display" data-execution_count="42">
+<pre><code>Text(0.5, 1.0, 'Sales Distribution with/without Promo2 ')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-43-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="c08c09c4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="43">
+<div class="cell-output cell-output-display" data-execution_count="43">
+<pre><code>count   844,338.00
+mean      6,955.96
+std       3,103.82
+min          46.00
+25%       4,859.00
+50%       6,369.00
+75%       8,360.00
+max      41,551.00
+Name: Sales, dtype: float64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="impact-of-promos-on-sales-average-sales" class="anchored">Impact of promos on sales (average sales)</h3>
+</blockquote>
+<ul>
+<li><p>To evaluate the impact of promotional campaigns on sales, we analyze average sales for open stores based on the presence of Promo and Promo2.</p></li>
+<li><p>Promo (standard promotion) shows a clear positive effect on sales.</p>
+<ul>
+<li><p>Average sales with Promo == 1 are significantly higher than when no promotion is active.</p></li>
+<li><p>This confirms that promotional campaigns are associated with a substantial increase in sales volume.</p></li>
+</ul></li>
+<li><p>Promo2 (alternate promotion) shows a slightly negative effect.</p>
+<ul>
+<li><p>Surprisingly, stores with Promo2 == 1 have lower average sales than those without.</p></li>
+<li><p>However, this inverse effect is modest and may reflect underlying factors such as promotion fatigue, seasonality, or store-specific dynamics.</p></li>
+</ul></li>
+</ul>
+<div id="9a5ec116" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="44">
+<div class="cell-output cell-output-display" data-execution_count="44">
+<pre><code>Text(0.5, 1.0, 'Average Sales with/without Promo ')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-45-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="8b023d2c" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="45">
+<div class="cell-output cell-output-display" data-execution_count="45">
+<pre><code>Text(0.5, 1.0, 'Average Sales with/without Promo2 ')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-46-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="holidays" class="level2">
+<h2 class="anchored" data-anchor-id="holidays">Holidays</h2>
+<blockquote class="blockquote">
+<h3 id="impact-of-state-holidays" class="anchored">Impact of state holidays</h3>
+</blockquote>
+<ul>
+<li>It is clear that the overwhelming majority of stores are closed on state holidays (~0.1% of data points represent holidays where stores are open). This will be addressed in the ‘Feature Engineering’ section below.</li>
+</ul>
+<div id="b9ee9d4f" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="46">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-47-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="3dcfc4bd" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="47">
+<div class="cell-output cell-output-stdout">
+<pre><code>State Holiday Counts  IsStateHoliday
+0    843428
+1       910
+Name: count, dtype: int64
+School Holiday Counts  IsSchoolHoliday
+0    680893
+1    163445
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="statistical-test-school-holiday-vs-non-holiday-sales" class="anchored">Statistical Test: School Holiday vs Non-Holiday Sales</h3>
+</blockquote>
+<p>To determine whether sales differ significantly between school holidays and non-holidays, we performed an independent two-sample t-test using <code>scipy.stats.ttest_ind</code>.</p>
+<ul>
+<li><p>We used Welch’s t-test by setting <code>equal_var=False</code>.</p>
+<ul>
+<li><p>A z-test was not used because population standard deviations are unknown.</p></li>
+<li><p>The sample sizes and standard deviations differ between groups, which violates the assumption of equal variances.</p></li>
+<li><p>Welch’s t-test does not assume equal variances and adjusts the degrees of freedom accordingly.</p></li>
+<li><p>Each group contains over 100,000 samples, so the sampling distribution of the mean is approximately normal due to the Central Limit Theorem.</p>
+<ul>
+<li>This indicates the t-test is the appropriate choice.</li>
+</ul></li>
+<li><p>Observations are independent because each row represents a separate store-date combination.</p></li>
+</ul></li>
+<li><p>The resulting t-statistic was 34.87 and the p-value was smaller than 1e-250.</p>
+<ul>
+<li>This means the difference in average sales between holidays and non-holidays is statistically significant.</li>
+</ul></li>
+<li><p>We conclude that school holidays are associated with meaningful changes in sales.</p></li>
+</ul>
+<div id="5c8588c7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="48">
+<div class="cell-output cell-output-stdout">
+<pre><code>   IsSchoolHoliday     mean      std   count
+0                0 6,897.21 3,083.39  680893
+1                1 7,200.71 3,175.82  163445
+
+T-statistic: 34.8898, P-value: 4.8717e-266</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="sales-distribution-on-school-holidays" class="anchored">Sales distribution on school holidays</h3>
+</blockquote>
+<div id="9343720d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="49">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-50-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="average-sales-on-school-holidays" class="anchored">Average sales on school holidays</h3>
+</blockquote>
+<div id="94ada11b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="50">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-51-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="section-6-feature-interactions" class="level1">
+<h1>Section 6: Feature interactions</h1>
+<hr>
+<section id="promotional-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="promotional-strategy">Promotional strategy</h2>
+<blockquote class="blockquote">
+<h3 id="promo-storetype---sales-open-days-only" class="anchored">Promo × StoreType -&gt; Sales (Open Days Only)</h3>
+</blockquote>
+<ul>
+<li><p>This boxplot examines how Promo campaigns influence sales on open days only, isolating the effect of promotions from store closures.</p></li>
+<li><p>All store types (A, B, C, D) show a similar increase in median sales during promotions (Promo == 1), indicating that promotions have a broad, consistent positive impact across store types.</p>
+<ul>
+<li><p>Store Type C exhibits the most compact distributions, suggesting more predictable and stable promo-driven performance.</p></li>
+<li><p>Store Type B, despite high overall sales, shows the widest spread and substantial overlap between promotional and non-promotional periods. This implies less consistency in promo effectiveness across stores in this group.</p>
+<ul>
+<li>The substantial variability in Store Type B could be due to store-level differences (e.g., location, size, demographics), and may benefit from more targeted promotional planning.</li>
+</ul></li>
+</ul></li>
+<li><p>These findings support the use of promotions across all store types, but suggest store-specific factors should be considered — particularly for Type B, where outcomes vary most.</p></li>
+</ul>
+<div id="1fc7217f-5d9b-477d-ab3e-6d7dce976abb" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="51">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-52-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="promo-assortment---sales" class="anchored">Promo × Assortment -&gt; Sales</h3>
+</blockquote>
+<ul>
+<li><p>This boxplot analyzes how promotional campaigns (Promo) affect sales across different assortment levels on days when stores are open.</p>
+<ul>
+<li><p>All assortment levels — basic (a), extra (b), and extended (c) — show a positive shift in median sales during promotion periods (Promo == 1), suggesting that promotions generally improve sales across the board.</p>
+<ul>
+<li><p>Basic assortment (a) and extended assortment (c) show the clearest and most consistent promo gain, with a noticeable upward shift in the median and limited overlap between promo and non-promo distributions. This indicates that promotions are highly effective in stores with narrow product ranges.</p></li>
+<li><p>Extra assortment (b) stores have high baseline sales and show minimal separation between promo and non-promo periods.</p>
+<ul>
+<li>The variety level of (b) may already be optimal for its customers (a happy medium between the basic and extended assortments), meaning a promotion would only have a limited effect on an already strong level of sales.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<div id="651307b3-20fe-4987-a93e-db7dbff4e06e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="52">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-53-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="promo-dayofweek---sales" class="anchored">Promo × DayOfWeek -&gt; Sales</h3>
+</blockquote>
+<ul>
+<li><p>NOTE: No promotional campaigns are recorded on Saturdays or Sundays in the dataset. They are included here to show the general pattern of sales throughout the week.</p></li>
+<li><p>The plot shows average sales by day of week, separated by promo status, using only days when stores were open.</p>
+<ul>
+<li><p>Among weekdays, Monday (Day 0) shows the largest uplift in average sales during promotions.</p></li>
+<li><p>Days 1–4 (Tuesday to Friday) also benefit from promos, though the gap is less dramatic.</p></li>
+<li><p>Weekends (Days 5–6) show strong baseline sales without any active promotions, with Sunday being the higher-earning day by a significant margin.</p></li>
+</ul></li>
+</ul>
+<div id="647b8a1b-1bd2-4097-9b28-4a886defdf99" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="53">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-54-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="promo2-month---sales" class="anchored">Promo2 × Month -&gt; Sales</h3>
+</blockquote>
+<ul>
+<li><p>For all months, Promo2 stores underperform compared to non-Promo2 stores in terms of average sales.</p></li>
+<li><p>Promo2 strategy might need reevaluation — it appears to be consistently detrimental.</p></li>
+</ul>
+<div id="bee4f7c0-ee6f-4937-9388-b7b43d1d6e5d" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="54">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-55-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="store-characteristics" class="level2">
+<h2 class="anchored" data-anchor-id="store-characteristics">Store characteristics</h2>
+<blockquote class="blockquote">
+<h3 id="storetype-x-competitiondistance---sales" class="anchored">StoreType x CompetitionDistance -&gt; Sales</h3>
+</blockquote>
+<ul>
+<li><p>This boxplot explores how sales performance varies by store format (a, b, c, d) depending on how close competitors are, using binned CompetitionDistance. Lighter green indicates nearby rivals, while darker green means distant competitors.</p></li>
+<li><p>Across all store types, stores tend to perform better when competitors are closer, contrary to typical assumptions:</p>
+<ul>
+<li><p>The lightest green boxes (closest competition) generally have higher medians than darker shades.</p></li>
+<li><p>This suggests proximity may boost foot traffic or place stores in denser commercial zones, rather than harming performance.</p></li>
+</ul></li>
+<li><p>Store Type b:</p>
+<ul>
+<li><p>Shows the strongest positive response to nearby competition.</p></li>
+<li><p>Median sales drop significantly as distance from competitors increases, with the darkest green (farthest) showing lowest sales.</p></li>
+<li><p>Possibly reliant on being clustered with other retailers.</p></li>
+</ul></li>
+<li><p>Store Types a, c, and d:</p>
+<ul>
+<li><p>All follow a similar trend—closer competition correlates with higher sales, although less dramatically than Type b.</p></li>
+<li><p>Type d has the most similar performance across all distances, indicating it is not an important factor for this store type.</p></li>
+</ul></li>
+<li><p>Rather than being cannibalized by nearby stores, these formats may be complemented by competitive presence.</p></li>
+</ul>
+<div id="5c4cc5bf-fc0e-46da-ae10-623b5f877d29" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="55">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-56-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="storetype-x-assortment---sales" class="anchored">StoreType x Assortment -&gt; Sales</h3>
+</blockquote>
+<ul>
+<li><p>NOTE: Assortment b is only available within store type b.</p></li>
+<li><p>This boxplot examines how sales distribution varies by store format (StoreType) and assortment strategy (Assortment), providing insight into which combinations deliver stronger performance. Note: Not all combinations are represented—Assortment B only exists within Store Type B. As such, we only compare Assortment B to other assortments within Store Type B, not across other store types.</p></li>
+<li><p>Assortment C is the clear winner across all store types.</p></li>
+<li><p>Store type b dominates overall:</p>
+<ul>
+<li><p>Shows the highest median sales among all Store Types.</p></li>
+<li><p>The strongest performing combination is store Type b + Assortment c, which leads all groups in median and upper quartile performance by a wide margin.</p></li>
+<li><p>Assortment b within store type b performs significantly worse, with notably lower median sales—suggesting this assortment strategy underperforms even within a strong store format.</p></li>
+</ul></li>
+<li><p>Store types a, c, and d:</p>
+<ul>
+<li><p>Perform similarly across assortment types, with minimal differences in median sales.</p></li>
+<li><p>These formats show broad, flat performance with no standout combinations, indicating they’re possibly less sensitive to assortment variations.</p></li>
+</ul></li>
+<li><p>All store types (especially a, c, d) exhibit long upper tails, showing that a subset of stores can still achieve high sales regardless of format or assortment.</p></li>
+<li><p>Store Type B stands out by combining both high median performance and less spread, which suggests consistent strength, not just a few outlier stores.</p></li>
+</ul>
+<div id="4ac1d014-f7c6-4bb7-8ada-02b6dca00b78" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="56">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-57-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h3 id="assortment-month---sales" class="anchored">Assortment × Month -&gt; Sales</h3>
+</blockquote>
+<ul>
+<li><p>NOTE: Assortment b is only available within store type b.</p></li>
+<li><p>This line plot shows normalized average sales per store by assortment and month, revealing per-store performance patterns over time.</p>
+<ul>
+<li><p>Assortment b consistently outperforms a and c across all months, confirming its strength seen in the boxplot (within store type b).</p></li>
+<li><p>Assortment c trails behind b, despite appearing stronger in the boxplot. Its wider distribution across store types likely inflates its aggregate presence, not per-store effectiveness.</p></li>
+<li><p>Assortment a shows the lowest normalized sales, reaffirming its weak performance across both visualizations.</p></li>
+</ul></li>
+<li><p>All assortments decline sharply in August, then recover moderately in Q4 — though none return to mid-year highs.</p></li>
+</ul>
+<div id="8ef7c228" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="57">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-58-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="section-7-feature-engineering" class="level1">
+<h1>Section 7: Feature engineering</h1>
+<hr>
+<ul>
+<li>This section translates key EDA insights and domain context into model-ready features to improve learning performance and generalization. The engineering efforts fall into three main categories:
+<ul>
+<li><strong>Continuous variable transformations</strong>
+<ul>
+<li><strong>Log-transformed <code>Sales</code> and <code>CompetitionDistance</code></strong> – applied <code>log1p()</code> to correct right-skewness and stabilize variance, which benefits tree-based models that rely on meaningful split thresholds.</li>
+<li><strong>Store-level average sales (<code>Store_AvgSales</code>)</strong> – captures persistent sales strength of each store to help contextualize daily fluctuations in sales volume.</li>
+<li><strong>Label-encoded <code>Month</code></strong> – converts calendar months into integer format for better model compatibility.</li>
+<li><strong>Engineered holiday-anticipation feature (<code>IsPreStateHolidayWindow</code>, 3-day window before state holiday)</strong> – designed to detect short-term sales shifts just before holidays. Although ultimately dropped, its creation demonstrates that the issue was considered during feature engineering.</li>
+</ul></li>
+<li><strong>Interaction-based feature additions</strong>
+<ul>
+<li>Ordinal scores based on observed promo responsiveness for:
+<ul>
+<li><strong>StoreType</strong> (<code>promo_storetype_score</code>)</li>
+<li><strong>Assortment</strong> (<code>promo_assortment_score</code>)</li>
+<li><strong>DayOfWeek</strong> (<code>promo_day_strength</code>)</li>
+</ul></li>
+<li><strong>Promo2 penalty flag</strong> (<code>promo2_penalty</code>) – captures under-performance linked to Promo2 strategy.</li>
+<li>One-hot encoded interaction combos:
+<ul>
+<li>Promo × StoreType</li>
+<li>Promo × Assortment</li>
+<li>StoreType × Assortment</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<section id="final-feature-adjustments---continuous-high-cardinality-variables" class="level2">
+<h2 class="anchored" data-anchor-id="final-feature-adjustments---continuous-high-cardinality-variables">Final feature adjustments - continuous / high-cardinality variables</h2>
+<p>This cell performs final transformations to ensure model-readiness for key numeric and categorical features:</p>
+<ul>
+<li><p>Log-transform Sales and CompetitionDistance:</p>
+<ul>
+<li>These variables exhibit heavy right skew. Applying a log(1+x) transformation reduces variance and stabilizes model learning, especially for tree-based regressors sensitive to wide ranges.</li>
+</ul></li>
+<li><p>Encode Month as an integer:</p>
+<ul>
+<li>This completes the encoding of the other date-extracted features (Day, Week). The encoding for Month was delayed to facilitate analyses using this feature above, and is done now for modeling purposes.</li>
+</ul></li>
+</ul>
+<section id="engineer-isprestateholidaywindow-feature" class="level3">
+<h3 class="anchored" data-anchor-id="engineer-isprestateholidaywindow-feature">Engineer IsPreStateHolidayWindow feature</h3>
+<ul>
+<li><p>As IsStateHoliday gives essentially the same information as Open (the above pots confirm that almost all stores are closed on state holidays), this column by itself isn’t very useful. However, logically the anticipation of holidays can have an impact on customer behavior.</p></li>
+<li><p>The new column IsPreStateHolidayWindow flags rows that are within a 3-week (21 day) period before a holiday. This helps us extract useful insight from the IsStateHoliday column without relying on it directly.</p></li>
+</ul>
+<div id="e70307c4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="59">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-60-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="impact-of-pre-holiday-window-21-days-before-a-state-holiday-on-sales" class="anchored">Impact of pre-holiday window (21 days before a state holiday) on Sales</h4>
+</blockquote>
+<div id="e30ac8ae" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="61">
+<div class="cell-output cell-output-stdout">
+<pre><code>Average Sales on Normal Days: 8.76
+Average Sales during Pre-Holiday Window: 8.89</code></pre>
+</div>
+</div>
+<div id="e316d442" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="62">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-63-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<h4 id="drop-features-related-to-state-holidays" class="anchored">Drop features related to state holidays</h4>
+</blockquote>
+<ul>
+<li><p>Following this analysis, is is obvious that state holidays have no significant effect on sales in this dataset. Almost all holiday days coincide with store closures, and pre-holiday windows show no measurable sales gain. We therefore drop <code>StateHoliday</code>, <code>IsStateHoliday</code>, and <code>IsPreStateHolidayWindow</code> from the final dataset.</p>
+<ul>
+<li>This makes sense when remembering that Rossmann is a drug store, which is less sensitive to holiday-based increases in demand (people don’t stock up on medications for the holidays).</li>
+</ul></li>
+</ul>
+</section>
+<section id="engineer-activestorecount-feature" class="level3">
+<h3 class="anchored" data-anchor-id="engineer-activestorecount-feature">Engineer ActiveStoreCount feature</h3>
+<ul>
+<li><p>To adjust for variations in the number of reporting stores per day, a new feature, <code>ActiveStoreCount</code>, captures how many stores reported sales on each day and allows us to normalize sales accordingly.</p>
+<ul>
+<li>This helps mitigate distortions caused by partial data (during closures).</li>
+</ul></li>
+</ul>
+<div id="db84abb4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="66">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-66-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="new-features-based-on-interactions" class="level3">
+<h3 class="anchored" data-anchor-id="new-features-based-on-interactions">New features based on interactions</h3>
+<p>These additions aim to capture sales-driving relationships between promotional activity, store format, product assortment, and temporal factors.</p>
+<ul>
+<li><strong>Ordinal scores from observed promo sensitivity</strong>
+<ul>
+<li><code>promo_storetype_score</code>
+<ul>
+<li>Reflects the observed consistency and strength of promotional effectiveness across different <code>StoreType</code> groups.</li>
+</ul></li>
+<li><code>promo_assortment_score</code>
+<ul>
+<li>Scores each assortment level based on responsiveness to promotions.</li>
+</ul></li>
+<li><code>promo_day_strength</code>
+<ul>
+<li>Assigns ordinal values to <code>DayOfWeek</code> based on how strongly promotions influenced sales by weekday.</li>
+</ul></li>
+</ul></li>
+<li><strong>Promo2 underperformance indicator</strong>
+<ul>
+<li><code>promo2_penalty</code>
+<ul>
+<li>Flags stores currently enrolled in Promo2, which consistently underperformed in the data. Treating this as a negative signal allows the model to down-weight expected gains when <code>Promo2 == 1</code>.</li>
+</ul></li>
+</ul></li>
+<li><strong>One-hot encoded categorical interactions</strong>
+<ul>
+<li>Each of these interaction terms is one-hot encoded, allowing tree-based models to learn from categorical relationships without introducing noise from rare combinations.</li>
+<li><code>promo_x_storetype</code>
+<ul>
+<li>Captures how different <code>StoreType</code> values respond under promotion (<code>Promo</code>). For example, <code>"1_b"</code> denotes store type b under a promotion.</li>
+</ul></li>
+<li><code>promo_x_assortment</code>
+<ul>
+<li>Encodes the relationship between promotional periods and product assortment complexity (<code>Assortment</code>).</li>
+</ul></li>
+<li><code>store_assortment_combo</code>
+<ul>
+<li>A direct combination of <code>StoreType</code> and <code>Assortment</code>, designed to capture high-performing format-strategy pairings (example: store type b with assortment b).</li>
+</ul></li>
+</ul></li>
+</ul>
+<div id="ae17f6fd" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="69">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="01_EDA_files/figure-html/cell-68-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="3fbbb028" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="70">
+<div class="cell-output cell-output-stdout">
+<pre><code>['promo_assortment_0_a', 'Month', 'store_assortment_a_a', 'promo_storetype_0_a', 'promo_assortment_1_a', 'store_assortment_b_c', 'StoreStartDate', 'promo_storetype_1_b', 'IsWeekend', 'store_assortment_a_c', 'promo2_penalty', 'promo_storetype_0_d', 'promo_storetype_1_d', 'Promo2Start', 'promo_assortment_score', 'Year', 'store_assortment_c_c', 'promo_storetype_1_a', 'store_assortment_d_a', 'Week', 'store_assortment_b_a', 'promo_assortment_0_b', 'ActiveStoreCount', 'promo_assortment_1_b', 'promo_assortment_1_c', 'promo_storetype_1_c', 'Promo2DurationWeeks', 'CompetitionOpenDuration', 'CompetitionOpenSince', 'store_assortment_d_c', 'store_assortment_b_b', 'promo_storetype_0_c', 'Day', 'promo_day_strength', 'promo_assortment_0_c', 'promo_storetype_score', 'IsSchoolHoliday', 'promo_storetype_0_b', 'store_assortment_c_a']</code></pre>
+</div>
+</div>
+<div id="957e1135" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;jupyter&quot;,&quot;value&quot;:{&quot;source_hidden&quot;:true}}" data-execution_count="71">
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 844338 entries, 0 to 844337
+Data columns (total 52 columns):
+ #   Column                     Non-Null Count   Dtype         
+---  ------                     --------------   -----         
+ 0   Store                      844338 non-null  int64         
+ 1   DayOfWeek                  844338 non-null  int64         
+ 2   Date                       844338 non-null  datetime64[ns]
+ 3   Sales                      844338 non-null  float64       
+ 4   Promo                      844338 non-null  int64         
+ 5   IsSchoolHoliday            844338 non-null  int64         
+ 6   StoreType                  844338 non-null  string        
+ 7   Assortment                 844338 non-null  string        
+ 8   CompetitionDistance        844338 non-null  float64       
+ 9   CompetitionOpenSinceMonth  844338 non-null  int64         
+ 10  CompetitionOpenSinceYear   844338 non-null  int64         
+ 11  Promo2                     844338 non-null  int64         
+ 12  Promo2SinceWeek            844338 non-null  int64         
+ 13  Promo2SinceYear            844338 non-null  int64         
+ 14  Year                       844338 non-null  int64         
+ 15  Month                      844338 non-null  int64         
+ 16  Day                        844338 non-null  int64         
+ 17  Week                       844338 non-null  int64         
+ 18  IsWeekend                  844338 non-null  int64         
+ 19  Promo2Start                421046 non-null  datetime64[ns]
+ 20  Promo2DurationWeeks        844338 non-null  float64       
+ 21  CompetitionOpenSince       844338 non-null  datetime64[ns]
+ 22  StoreStartDate             844338 non-null  datetime64[ns]
+ 23  CompetitionOpenDuration    844338 non-null  int64         
+ 24  ActiveStoreCount           844338 non-null  int64         
+ 25  promo_storetype_score      844338 non-null  int64         
+ 26  promo_assortment_score     844338 non-null  int64         
+ 27  promo_day_strength         844338 non-null  int64         
+ 28  promo2_penalty             844338 non-null  int64         
+ 29  promo_storetype_0_a        844338 non-null  boolean       
+ 30  promo_storetype_0_b        844338 non-null  boolean       
+ 31  promo_storetype_0_c        844338 non-null  boolean       
+ 32  promo_storetype_0_d        844338 non-null  boolean       
+ 33  promo_storetype_1_a        844338 non-null  boolean       
+ 34  promo_storetype_1_b        844338 non-null  boolean       
+ 35  promo_storetype_1_c        844338 non-null  boolean       
+ 36  promo_storetype_1_d        844338 non-null  boolean       
+ 37  promo_assortment_0_a       844338 non-null  boolean       
+ 38  promo_assortment_0_b       844338 non-null  boolean       
+ 39  promo_assortment_0_c       844338 non-null  boolean       
+ 40  promo_assortment_1_a       844338 non-null  boolean       
+ 41  promo_assortment_1_b       844338 non-null  boolean       
+ 42  promo_assortment_1_c       844338 non-null  boolean       
+ 43  store_assortment_a_a       844338 non-null  boolean       
+ 44  store_assortment_a_c       844338 non-null  boolean       
+ 45  store_assortment_b_a       844338 non-null  boolean       
+ 46  store_assortment_b_b       844338 non-null  boolean       
+ 47  store_assortment_b_c       844338 non-null  boolean       
+ 48  store_assortment_c_a       844338 non-null  boolean       
+ 49  store_assortment_c_c       844338 non-null  boolean       
+ 50  store_assortment_d_a       844338 non-null  boolean       
+ 51  store_assortment_d_c       844338 non-null  boolean       
+dtypes: boolean(23), datetime64[ns](4), float64(3), int64(20), string(2)
+memory usage: 223.9 MB</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<hr>
+<p>With the exploratory data analysis complete, we now have a well-understood, cleaned, and feature-engineered dataset ready for modeling.</p>
+<ul>
+<li><p>Key insights include strong temporal trends, meaningful interactions between assortment types and store formats, and potential benefits from proximity to competitors.</p></li>
+<li><p>Anomalies and missing values have been addressed systematically, continuous features have been transformed to mitigate outlier effects, and new features have been created to capture business-relevant patterns.</p></li>
+<li><p>We now proceed to the modeling phase in <strong>02_Modeling.ipynb</strong>.</p></li>
+</ul>
+<section id="export-processed-dataset-for-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="export-processed-dataset-for-modeling">Export processed dataset for modeling</h2>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

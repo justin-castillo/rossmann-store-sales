@@ -1,100 +1,93 @@
-# FINAL REPORT: Rossmann Store Sales Forecasting
+# Final Report
+A leakage‑safe, time‑aware pipeline that forecasts daily sales per store.
 
 ---
 
-## 1. Problem Overview
+## Executive Summary
 
-Rossmann operates over 1,000 drugstores across Europe. This project aims to predict daily sales for each store using historical data, enabling better operational planning. The dataset is large (~844,000 rows), with rich temporal and categorical structure but no direct customer-level granularity.
+- **Model:** XGBoost tuned with Optuna on a chronological split.
+- **Test results (log scale):** **RMSE 0.169**, **MAE 0.130**, **R² 0.833**.
+- **Data coverage:** 2013‑01‑01 to 2015‑07‑31; **844,338** open‑store rows; **1,115** stores.
+- **Main drivers:** Promotions, competition distance, weekday and store effects.
 
-The modeling goal was to predict log-transformed sales based on structured features engineered from raw tabular data.
-
----
-
-## 2. Modeling Approach
-
-The pipeline followed a clean progression:
-
-1. **Data Cleaning and Preprocessing**  
-   - Removed closed-store days to eliminate artificial zeros.
-   - Parsed dates and ensured consistency in competition/promo fields.
-   - Verified no missing target values (`Sales`) or leakage variables.
-
-2. **Feature Engineering**  
-   - Time decomposition: year, month, day, week, weekday, weekend.
-   - Competition and promo duration features.
-   - Composite features for promo-storetype/assortment alignment.
-   - One-hot encoding for store type and assortment categories.
-
-3. **Model Selection and Training**  
-   - Main model: **XGBoost Regressor** using `log1p(Sales)` target.
-   - Alternative checks: CatBoost, Ridge.
-   - Optuna used to tune parameters such as `max_depth`, `learning_rate`, `n_estimators`, and `subsample`.
-   - Stratified K-Fold cross-validation ensured store distribution parity.
+> ![alt text](outputs/final_report_images/final_metrics_bar_chart.png)
 
 ---
 
-## 3. Evaluation Summary
+## 1. Problem & Approach
 
-Performance was measured using RMSE, MAE, and R² on both validation and hold-out test sets.
-
-| Metric   | Validation | Test     |
-|----------|------------|----------|
-| RMSE     | 0.42       | 0.41     |
-| MAE      | 0.32       | 0.32     |
-| R² Score | -0.0073    | -0.0019  |
-
-- The model captures broad sales trends but struggles with generalization, as reflected in the negative R² values.  
-- Potential contributors: per-store volatility, lack of product-level or economic indicators, unmodeled seasonality variations.
+- Business need: reliable daily forecasts for staffing and inventory at the store level.
+- Predict **log1p(Sales)** per store to stabilize variance.
+- Use a **time‑aware split** with the last six weeks as test to mirror real deployment and prevent leakage.
 
 ---
 
-## 4. Feature Importance & SHAP Interpretability
+## 2. Data & Features
 
-We used **SHAP** (SHapley Additive exPlanations) to analyze model behavior.
+- Built from `train.csv` joined with `store.csv`. Keep **open days only**. Remove `Customers` at training and inference time.
+- Key transforms: `log1p(Sales)`, `log1p(CompetitionDistance)`, one‑hot for low‑cardinality categoricals, calendar parts (year, month, week, weekday, weekend).
+- Useful engineered signals: a leakage‑safe **Store_AvgSales** (computed only on the training window), a small set of promo × store/assortment interactions, and **ActiveStoreCount** for daily coverage.
 
-### Top Drivers of Sales
-- **Day of Week**: Weekends and Mondays show strong patterns.
-- **Promotion Active**: Promo days consistently lift sales across all stores.
-- **Competition Distance**: Closer competitors impact sales negatively.
-- **Store Type & Assortment**: More comprehensive assortments perform better, especially in isolated regions.
-
-### Interactions Observed
-- Promotions had stronger impact on certain store types (e.g., 'b') during weekdays.
-- When competition was very far (>5km), the sales effect of promos flattened.
-- Combined SHAP values showed multi-factor dependencies—not easily modeled linearly.
-
-> 🧠 *SHAP Visuals (Placeholder):*  
-> 1. SHAP Summary Plot  
-> 2. SHAP Dependence (Promo × Competition)  
-> 3. SHAP Force Plot (Single Store-Day)
+> ![alt text](outputs/final_report_images/02_average_daily_sales_trend_lowess.png)
 
 ---
 
-## 5. Observations & Limitations
+## 3. Key EDA Findings
 
-- The model had difficulty generalizing across highly variable store behaviors.
-- Holiday effects were partially modeled but lacked granularity (e.g., local holidays, weather).
-- No explicit time series or autocorrelation methods were applied.
-- The use of log-transformed targets (log1p(Sales)) improved stability but may have obscured low-value predictions.
+- **Promotions work.** Promo days shift the sales distribution higher and lift means.
+- **Promo2 underperforms.** Stores flagged with Promo2 trail non‑Promo2 stores on average.
+- **Competition proximity often helps.** Shorter distances correlate with higher sales, consistent with dense retail zones.
+- **Store heterogeneity matters.** Type **b** stores are high‑performing but more volatile; others are steadier.
+- **School holidays** show a measurable effect; **state holidays** mostly imply closures and were dropped.
 
----
-
-## 6. Recommendations
-
-1. **Add Exogenous Variables**: Macroeconomic data, marketing spend, or regional events could improve predictive power.
-2. **Hierarchical Modeling**: Train grouped models per store type or location region.
-3. **Temporal Regularization**: Introduce time-aware models such as LightGBM with lags or Prophet-style hybrid models.
-4. **Deployment Plan**: Incorporate retraining logic and evaluate on unseen months before launch.
+> ![alt text](outputs/final_report_images/03_promo_non_promo_dist.png)
+> ![alt text](outputs/final_report_images/04_competition_distance_sales.png)
+> ![alt text](outputs/final_report_images/05_sales_store_type.png)
+> ![alt text](outputs/final_report_images/06_promo_weekday.png)
 
 ---
 
-## 7. Conclusion
+## 4. Validation & Modeling
 
-The project demonstrates a complete machine learning workflow for structured tabular prediction: from EDA through deployment-ready modeling. While raw accuracy can be improved, the SHAP interpretability ensures transparent decisions—a requirement in real-world retail forecasting.
+- **Split:** final six weeks (2015‑06‑19 → 2015‑07‑31) as test; earlier period for train/validation; no date overlap.
+- Retrained on train+val and evaluated once on the holdout.
+- **Result:** **RMSE 0.169**, **MAE 0.130**, **R² 0.833** on the log scale.
+
+> ![alt text](outputs/final_report_images/07_predicted_actual_residuals_scatter.png)
+> ![alt text](outputs/final_report_images/08_residual_histogram.png)
 
 ---
 
-Author: Justin Castillo
+## 5. What Drives the Forecast
 
-[LinkedIn](https://www.linkedin.com/in/justin-castillo-69351198/)  
-[GitHub Portfolio](https://github.com/justin-castillo)
+- **Promotions** are the strongest, most consistent signal across importance, permutation, and SHAP.
+- **Competition distance** ranks among the top drivers; closer stores often see higher predicted sales.
+- **Calendar/store effects** (weekday and store baselines) provide steady lift.
+
+> ![alt text](outputs/final_report_images/09_top20_feature_importances.png)
+> ![alt text](outputs/final_report_images/10_permutation_importances.png)
+> ![alt text](outputs/shap_beeswarm_top_20.png)
+
+---
+
+## 6. Implications
+
+- **Promo planning:** plan staffing and inventory around proven promo uplift; measure by store and weekday. Treat **Promo2** cautiously.
+- **Operations:** accuracy is strong enough for schedule and inventory planning; add a buffer for peak days.
+- **Location signal:** near‑competitor stores can thrive; proximity often proxies for foot traffic.
+
+---
+
+## 7. Next Steps
+
+1. **Add prediction intervals** so planners see a range, not just a point.
+2. **Automate a nightly batch run** that writes store‑day forecasts to CSV for the dashboard.
+3. **Set a simple retraining cadence** (for example, quarterly) and monitor a few basic checks like promo mix and competition distance.
+4. **Create a lightweight dashboard** to compare forecasts vs. actuals by store and day.
+
+---
+
+**Justin Castillo**  
+Email: *[add your email]*  
+GitHub: https://github.com/justin-castillo  
+LinkedIn: https://www.linkedin.com/in/justin-castillo-69351198/
