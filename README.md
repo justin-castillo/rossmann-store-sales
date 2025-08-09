@@ -78,6 +78,7 @@ pred = np.expm1(pred_log)  # back-transform if training used log1p(Sales)
 
 ---
 
-## Maintainer
-
-Justin Castillo — Email: jcastillo.hotels@gmail.com · GitHub: https://github.com/justin-castillo · LinkedIn: https://www.linkedin.com/in/justin-castillo-69351198/
+**Justin Castillo**  
+[jcastillo.hotels@gmail.com](mailto:jcastillo.hotels@gmail.com)  
+[GitHub](https://github.com/justin-castillo)  
+[LinkedIn](https://www.linkedin.com/in/justin-castillo-69351198/)
