@@ -10,7 +10,7 @@ A leakage‑safe, time‑aware pipeline that forecasts daily sales per store.
 - **Data coverage:** 2013‑01‑01 to 2015‑07‑31; **844,338** open‑store rows; **1,115** stores.
 - **Main drivers:** Promotions, competition distance, weekday and store effects.
 
-> ![alt text](outputs/final_report_images/final_metrics_bar_chart.png)
+> ![](outputs/final_report_images/final_metrics_bar_chart.png)
 
 ---
 
@@ -28,7 +28,7 @@ A leakage‑safe, time‑aware pipeline that forecasts daily sales per store.
 - Key transforms: `log1p(Sales)`, `log1p(CompetitionDistance)`, one‑hot for low‑cardinality categoricals, calendar parts (year, month, week, weekday, weekend).
 - Useful engineered signals: a leakage‑safe **Store_AvgSales** (computed only on the training window), a small set of promo × store/assortment interactions, and **ActiveStoreCount** for daily coverage.
 
-> ![alt text](outputs/final_report_images/02_average_daily_sales_trend_lowess.png)
+> ![](outputs/final_report_images/02_average_daily_sales_trend_lowess.png)
 
 ---
 
